@@ -1,0 +1,17 @@
+# Node.js
+node_modules/
+dist/
+.env.local
+
+# Vite
+.vite/
+.vite_cache/
+
+# Log et système
+*.log
+.DS_Store
+Thumbs.db
+
+# IDE et éditeurs
+.vscode/
+.idea/
