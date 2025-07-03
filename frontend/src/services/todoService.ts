@@ -1,0 +1,91 @@
+export interface Todo {
+  id: number;
+  title: string;
+  completed: boolean;
+}
+
+export interface TodoInput {
+  title: string;
+  completed: boolean;
+}
+
+const API_URL = 'https://localhost:8000/api';
+
+const defaultOptions = {
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  },
+  credentials: 'include' as RequestCredentials,
+};
+
+
+export const todoService = {
+
+  async getAllTodos(): Promise<Todo[]> {
+    const response = await fetch(`${API_URL}/todos`, {
+      ...defaultOptions,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erreur HTTP: ${response.status}`);
+    }
+
+    return await response.json();
+  },
+
+  async getTodoById(id: number | string): Promise<Todo> {
+    const response = await fetch(`${API_URL}/todos/${id}`, {
+      ...defaultOptions,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erreur HTTP: ${response.status}`);
+    }
+
+    return await response.json();
+  },
+
+  async createTodo(todoData: TodoInput): Promise<Todo> {
+    const response = await fetch(`${API_URL}/todos`, {
+      ...defaultOptions,
+      method: 'POST',
+      body: JSON.stringify(todoData),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erreur HTTP: ${response.status}`);
+    }
+
+    return await response.json();
+  },
+
+  async updateTodo(id: number | string, todoData: Partial<TodoInput>): Promise<Todo> {
+    const response = await fetch(`${API_URL}/todos/${id}`, {
+      ...defaultOptions,
+      method: 'PUT',
+      body: JSON.stringify(todoData),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erreur HTTP: ${response.status}`);
+    }
+
+    return await response.json();
+  },
+
+  async deleteTodo(id: number | string): Promise<void> {
+    const response = await fetch(`${API_URL}/todos/${id}`, {
+      ...defaultOptions,
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erreur HTTP: ${response.status}`);
+    }
+  },
+
+  async toggleTodoCompletion(id: number | string, completed: boolean): Promise<Todo> {
+    return this.updateTodo(id, { completed });
+  }
+};

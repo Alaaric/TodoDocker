@@ -1,12 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import TodoItem from '../components/Todo';
-
-interface Todo {
-  id: number;
-  title: string;
-  completed: boolean;
-}
+import { todoService, Todo } from '../services/todoService';
 
 const TodoListPage = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -17,26 +12,12 @@ const TodoListPage = () => {
     const fetchTodos = async () => {
       try {
         setLoading(true);
-        const response = await fetch('https://localhost:8000/api/todos', {
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-        });
-        
-        if (!response.ok) {
-          throw new Error(`Erreur HTTP: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        
+        const data = await todoService.getAllTodos();
         setTodos(data);
         setError(null);
       } catch (err) {
         console.error('Erreur lors de la récupération des tâches:', err);
         setError('Impossible de charger les tâches. Veuillez réessayer plus tard.');
-        
       } finally {
         setLoading(false);
       }
@@ -47,23 +28,11 @@ const TodoListPage = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      const response = await fetch(`https://localhost:8000/api/todos/${id}`, {
-        method: 'DELETE',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Erreur HTTP: ${response.status}`);
-      }
-
+      await todoService.deleteTodo(id);
       setTodos(todos.filter(todo => todo.id !== id));
     } catch (err) {
       console.error('Erreur lors de la suppression:', err);
       setError('Impossible de supprimer la tâche. Veuillez réessayer.');
-      // On pourrait ajouter un système de notification ici
     }
   };
 
@@ -72,22 +41,9 @@ const TodoListPage = () => {
       const todoToUpdate = todos.find(t => t.id === id);
       if (!todoToUpdate) return;
       
-      const updatedTodo = { ...todoToUpdate, completed: !todoToUpdate.completed };
+      const newCompletedState = !todoToUpdate.completed;
+      const updatedTodo = await todoService.toggleTodoCompletion(id, newCompletedState);
       
-      const response = await fetch(`https://localhost:8000/api/todos/${id}`, {
-        method: 'PUT',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({ completed: !todoToUpdate.completed }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Erreur HTTP: ${response.status}`);
-      }
-
       setTodos(todos.map(t => t.id === id ? updatedTodo : t));
     } catch (err) {
       console.error('Erreur lors de la mise à jour:', err);
@@ -98,7 +54,7 @@ const TodoListPage = () => {
   return (
     <>
       <div className="todo-container">
-        <h1>Ma Liste de Tâches</h1>
+        <h1>TODO LIST</h1>
         <Link to="/add" className="add-button">Ajouter une tâche</Link>
         
         {loading ? (
