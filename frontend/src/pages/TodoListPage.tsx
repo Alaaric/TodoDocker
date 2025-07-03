@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import TodoItem from '../components/Todo';
-import { todoService, Todo } from '../services/todoService';
+import { Todo } from '../services/todoServiceInterface';
+import { useTodoService } from '../hooks/useTodoService';
 
 const TodoListPage = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const todoService = useTodoService();
 
   useEffect(() => {
     const fetchTodos = async () => {
@@ -24,7 +26,7 @@ const TodoListPage = () => {
     };
 
     fetchTodos();
-  }, []);
+  }, [todoService]);
 
   const handleDelete = async (id: number) => {
     try {
