@@ -79,5 +79,4 @@ export class TodoService implements TodoManagement {
   }
 }
 
-// Instance par défaut du service Todo
 export const todoService = new TodoService();
