@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
+import { todoService, TodoInput } from '../services/todoService';
 
 const TodoFormPage = () => {
   const [title, setTitle] = useState("");
@@ -16,18 +17,7 @@ const TodoFormPage = () => {
       const fetchTodo = async () => {
         try {
           setLoading(true);
-          const response = await fetch(`https://localhost:8000/api/todos/${params.id}`, {
-            headers: {
-              'Accept': 'application/json',
-            },
-            credentials: 'include',
-          });
-          
-          if (!response.ok) {
-            throw new Error(`Erreur HTTP: ${response.status}`);
-          }
-          
-          const todoData = await response.json();
+          const todoData = await todoService.getTodoById(params.id as string);
           setTitle(todoData.title);
           setCompleted(todoData.completed);
         } catch (err) {
@@ -52,23 +42,12 @@ const TodoFormPage = () => {
       setLoading(true);
       setError(null);
       
-      const todoData = { title, completed };
-      const url = isEditing 
-        ? `https://localhost:8000/api/todos/${params.id}`
-        : 'https://localhost:8000/api/todos';
+      const todoData: TodoInput = { title, completed };
       
-      const response = await fetch(url, {
-        method: isEditing ? 'PUT' : 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(todoData),
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Erreur HTTP: ${response.status}`);
+      if (isEditing && params.id) {
+        await todoService.updateTodo(params.id as string, todoData);
+      } else {
+        await todoService.createTodo(todoData);
       }
       
       navigate('/');
