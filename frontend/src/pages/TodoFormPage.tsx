@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { todoService, TodoInput } from '../services/todoService';
+import { TodoInput } from '../services/todoServiceInterface';
+import { useTodoService } from '../hooks/useTodoService';
 
 const TodoFormPage = () => {
   const [title, setTitle] = useState("");
@@ -11,6 +12,7 @@ const TodoFormPage = () => {
   const params = useParams<{ id?: string }>();
   const navigate = useNavigate();
   const isEditing = params.id !== undefined;
+  const todoService = useTodoService();
   
   useEffect(() => {
     if (isEditing && params.id) {
@@ -33,7 +35,7 @@ const TodoFormPage = () => {
       
       fetchTodo();
     }
-  }, [isEditing, params.id]);
+  }, [isEditing, params.id, todoService]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
