@@ -1,13 +1,12 @@
 import { Todo, TodoInput, TodoManagement } from './todoServiceInterface';
 
-const API_URL = 'https://localhost:8000/api';
+const API_URL = 'http://localhost:8000/api';
 
 const defaultOptions = {
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
-  },
-  credentials: 'include' as RequestCredentials,
+  }
 };
 
 export class TodoService implements TodoManagement {
