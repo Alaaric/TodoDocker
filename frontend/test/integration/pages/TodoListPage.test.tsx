@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import TodoListPage from '../../src/pages/TodoListPage';
-import { TodoServiceProvider } from '../../src/context/TodoServiceContext';
-import { mockTodos } from '../mocks/mockTodoService';
+import TodoListPage from '../../../src/pages/TodoListPage';
+import { TodoServiceProvider } from '../../../src/context/TodoServiceContext';
+import { mockTodos } from '../../mocks/mockTodoService';
 
 const mockGetAllTodos = vi.fn();
 const mockDeleteTodo = vi.fn();

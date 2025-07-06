@@ -12,6 +12,14 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
       all: true,
+      include: [
+        'src/'
+      ],
+      exclude: [
+        'src/main.tsx',
+        'src/vite-env.d.ts',
+        'src/**/todoServiceInterface.ts',
+      ],
       thresholds: {
         lines: 80,
         functions: 80,
