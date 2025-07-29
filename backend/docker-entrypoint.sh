@@ -8,6 +8,8 @@ until mysql -h database -u todo_user -ptodo_password -e "SELECT 1"; do
 done
 echo "MySQL est prêt!"
 
+composer install --prefer-dist --no-scripts --optimize-autoloader
+
 mkdir -p /var/www/html/var/cache /var/www/html/var/log
 
 
