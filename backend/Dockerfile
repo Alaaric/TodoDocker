@@ -23,7 +23,7 @@ RUN composer install --prefer-dist --no-scripts
 
 COPY . .
 
-RUN composer dump-autoload --no-scripts --no-dev --optimize
+RUN composer dump-autoload --no-scripts --optimize
 
 RUN chown -R www-data:www-data var/
 
