@@ -27,6 +27,18 @@ pipeline {
           sh 'npm run test:coverage'
         }
       }
+      post {
+        always {
+          publishHTML([
+            allowMissing: false,
+            alwaysLinkToLastBuild: true,
+            keepAll: true,
+            reportDir: 'frontend/coverage',
+            reportFiles: 'index.html',
+            reportName: 'Coverage Report'
+          ])
+        }
+      }
     }
   }
   
