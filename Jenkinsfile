@@ -1,6 +1,10 @@
 pipeline {
   agent any
   
+  triggers {
+    pollSCM('* * * * *')
+  }
+  
   environment {
     REGISTRY = 'ghcr.io'
     OWNER = 'alaaric'
@@ -12,7 +16,7 @@ pipeline {
   stages {
     stage('Checkout') {
       steps {
-        git branch: 'main', url: 'https://github.com/Alaaric/TodoDocker.git'
+        checkout scm
       }
     }
     
