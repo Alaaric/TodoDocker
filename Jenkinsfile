@@ -1,10 +1,6 @@
 pipeline {
   agent any
   
-  triggers {
-    pollSCM('* * * * *')
-  }
-  
   environment {
     REGISTRY = 'ghcr.io'
     OWNER = 'alaaric'
